@@ -1,0 +1,24 @@
+{
+  "name": "sample-app",
+  "version": "1.0.0",
+  "description": "Week 5 DevOps Internship - CI/CD sample app for Jenkins pipeline",
+  "main": "app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest --ci"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "jest-junit": "^17.0.0",
+    "supertest": "^7.2.2"
+  }
+}

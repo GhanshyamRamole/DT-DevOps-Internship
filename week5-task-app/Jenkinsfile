@@ -1,0 +1,48 @@
+ 
+pipeline {
+    agent any
+
+    environment {
+        // Example of an environment variable available to every stage
+        APP_ENV = 'ci'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Installing dependencies...'
+                sh 'npm install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running automated tests...'
+                sh 'npm test'
+            }
+            post {
+                always {
+                    // Publish JUnit XML test results in Jenkins' Test Result UI
+                    junit 'reports/junit.xml'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed. Check the Console Output above for details.'
+        }
+    }
+}
