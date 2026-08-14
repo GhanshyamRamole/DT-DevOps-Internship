@@ -1,0 +1,58 @@
+// =============================================================================
+// Jenkinsfile - Week 5 Hands-on Activity
+// Declarative pipeline: Checkout -> Build -> Test -> Validation
+// Validation stage runs ESLint as a code-quality gate.
+// =============================================================================
+
+pipeline {
+    agent any
+
+    environment {
+        APP_ENV = 'ci'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Installing dependencies...'
+                sh 'npm install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running automated tests...'
+                sh 'npm test'
+            }
+            post {
+                always {
+                    junit 'reports/junit.xml'
+                }
+            }
+        }
+
+        stage('Validation') {
+            steps {
+                echo 'Running code-quality validation (ESLint)...'
+                sh 'npm run lint'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully - all stages passed.'
+        }
+        failure {
+            echo 'Pipeline failed. Check the Console Output above to identify which stage failed and why.'
+        }
+    }
+}

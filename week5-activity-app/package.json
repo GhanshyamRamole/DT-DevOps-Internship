@@ -1,0 +1,26 @@
+{
+  "name": "week5-activity-app",
+  "version": "1.0.0",
+  "description": "Week 5 DevOps Internship - Activity CI pipeline app for Jenkins",
+  "main": "app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest --ci",
+    "lint": "eslint ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^10.8.1",
+    "jest": "^30.4.2",
+    "jest-junit": "^17.0.0",
+    "supertest": "^7.2.2"
+  }
+}
