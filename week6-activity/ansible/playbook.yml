@@ -1,0 +1,98 @@
+---
+# =============================================================================
+# playbook.yml - Week 6 Hands-on Activity
+# Configures the same Terraform-provisioned server as the Weekly Task, with:
+#   1. Required packages
+#   2. Application user
+#   3. Web server (nginx) with a custom deployed page
+#   4. Required service configuration (custom nginx site config)
+# =============================================================================
+
+- name: Configure application server (Activity)
+  hosts: app_servers
+  become: false
+
+  vars:
+    app_user: appuser
+    required_packages:
+      - nginx
+      - curl
+      - git
+    # This variable is what we change between the "before" and "after" runs
+    # to demonstrate a configuration change applied purely through Ansible.
+    app_message: "Hello from Terraform + Ansible - Version 1"
+
+  tasks:
+
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install required packages
+      apt:
+        name: "{{ required_packages }}"
+        state: present
+
+    - name: Create application user
+      user:
+        name: "{{ app_user }}"
+        shell: /bin/bash
+        create_home: yes
+        state: present
+
+    - name: Install nginx (web server)
+      apt:
+        name: nginx
+        state: present
+
+    - name: Deploy custom index.html from template
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+        owner: "{{ app_user }}"
+        mode: '0644'
+      notify: Restart nginx
+
+    - name: Deploy custom nginx site configuration
+      template:
+        src: templates/app.conf.j2
+        dest: /etc/nginx/sites-available/app.conf
+        mode: '0644'
+      notify: Restart nginx
+
+    - name: Disable the default nginx site (avoids default_server conflict)
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Restart nginx
+
+    - name: Enable the custom site
+      file:
+        src: /etc/nginx/sites-available/app.conf
+        dest: /etc/nginx/sites-enabled/app.conf
+        state: link
+      notify: Restart nginx
+
+    - name: Start and enable nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+  post_tasks:
+    - name: Verify the deployed page is being served
+      uri:
+        url: "http://localhost:80"
+        return_content: yes
+      register: page_check
+
+    - name: Show verification result
+      debug:
+        msg: "Server returned: {{ page_check.content }}"
