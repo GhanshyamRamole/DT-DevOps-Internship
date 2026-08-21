@@ -1,0 +1,50 @@
+---
+# =============================================================================
+# playbook.yml - Week 6 Weekly Task
+# =============================================================================
+
+- name: Configure application server
+  hosts: app_servers
+  become: false   
+
+  vars:
+    app_user: appuser
+    required_packages:
+      - nginx
+      - curl
+      - git
+
+  tasks:
+
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install required packages
+      apt:
+        name: "{{ required_packages }}"
+        state: present
+
+    - name: Create application user
+      user:
+        name: "{{ app_user }}"
+        shell: /bin/bash
+        create_home: yes
+        state: present
+
+    - name: Start and enable nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Verify nginx is responding
+      uri:
+        url: "http://localhost:80"
+        status_code: 200
+      register: nginx_check
+
+    - name: Show verification result
+      debug:
+        msg: "nginx responded with status {{ nginx_check.status }}"
