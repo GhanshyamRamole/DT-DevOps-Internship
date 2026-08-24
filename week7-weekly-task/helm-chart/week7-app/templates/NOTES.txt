@@ -1,0 +1,7 @@
+Your {{ .Release.Name }} app has been deployed with {{ .Values.replicaCount }} replica(s).
+
+To access it (Minikube):
+  minikube service {{ .Release.Name }}-service --url
+
+Or via NodePort directly:
+  http://<node-ip>:{{ .Values.service.nodePort }}

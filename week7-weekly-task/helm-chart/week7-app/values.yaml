@@ -1,0 +1,27 @@
+# Default values for the week7-app chart.
+# Override any of these with: helm install <release> . --set replicaCount=5
+# or by providing your own -f myvalues.yaml
+
+replicaCount: 2
+
+image:
+  repository: nginxdemos/hello
+  tag: plain-text
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 30082
+
+config:
+  appName: "DevOps Week 7 App (via Helm)"
+  appEnv: "development"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
