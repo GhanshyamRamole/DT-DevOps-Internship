@@ -25,14 +25,14 @@ kubectl apply -f manifests/01-deployment.yaml
 kubectl apply -f manifests/02-service.yaml
 
 kubectl get pods -n week7-activity
-# Screenshot this showing 3/3 Running pods - satisfies "Screenshot of 3 Running Replicas"
+
 ```
 
 ## Step 2: Access the App
 
 ```bash
 minikube service web-app-service -n week7-activity --url
-# Screenshot the page loading - satisfies "Screenshot of Application Access"
+
 ```
 
 ## Step 3: Scale Up and Down
@@ -40,7 +40,7 @@ minikube service web-app-service -n week7-activity --url
 ```bash
 kubectl scale deployment web-app --replicas=5 -n week7-activity
 kubectl get pods -n week7-activity
-# Screenshot showing 5 pods - satisfies "Screenshot of Scaling"
+
 
 kubectl scale deployment web-app --replicas=3 -n week7-activity
 kubectl get pods -n week7-activity
@@ -52,7 +52,7 @@ kubectl get pods -n week7-activity
 kubectl set image deployment/web-app web-app=nginx:1.27 -n week7-activity
 
 kubectl rollout status deployment/web-app -n week7-activity
-# Screenshot this - satisfies "Screenshot of Rolling Update"
+
 
 kubectl get pods -n week7-activity -o wide
 kubectl describe deployment web-app -n week7-activity | grep Image
@@ -67,7 +67,7 @@ fully available (3 replicas minimum) throughout the entire update.
 kubectl rollout history deployment/web-app -n week7-activity
 kubectl rollout undo deployment/web-app -n week7-activity
 kubectl rollout status deployment/web-app -n week7-activity
-# Screenshot this - satisfies "Screenshot of Rollback"
+
 
 kubectl describe deployment web-app -n week7-activity | grep Image
 # Should show nginx:1.25 again
