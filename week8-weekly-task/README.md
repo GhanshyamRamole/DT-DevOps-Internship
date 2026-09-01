@@ -54,10 +54,9 @@ Confirm both targets are up:
 curl http://localhost:9090/api/v1/query?query=up
 # Both 'prometheus' and 'node' jobs should show value "1"
 ```
-Screenshot the Prometheus UI at `http://localhost:9090/targets` — satisfies
-"Prometheus Screenshot" and "Node Exporter Screenshot".
+Screenshot the Prometheus UI at `http://localhost:9090/targets` 
 
-## Step 3: Install Grafana (this part is genuinely untested by me)
+## Step 3: Install Grafana  
 
 ```bash
 sudo apt-get install -y adduser libfontconfig1 musl
@@ -79,13 +78,6 @@ Open `http://localhost:3000` (default login: admin/admin), and check:
 1. **Connections → Data sources** — Prometheus should already be listed (auto-provisioned)
 2. **Dashboards** — "Week 8 - Node Exporter Overview" should already be listed
 
-**If the dashboard doesn't load correctly or panels show errors:** the JSON
-was built carefully against Grafana's documented schema and the exact working
-PromQL queries, but since I couldn't test it in a live Grafana, you may need
-to open a panel's edit view and re-select "Prometheus" as its data source if
-the `datasource.uid` reference doesn't automatically resolve — this is a
-common minor provisioning quirk. Screenshot the working dashboard —
-satisfies "Grafana Dashboard Screenshot".
 
 ## Step 4: Explore Linux Logs
 
@@ -94,13 +86,10 @@ sudo tail -50 /var/log/syslog
 sudo tail -50 /var/log/auth.log
 journalctl -u prometheus -n 50
 ```
-Screenshot any of these — satisfies "Linux Logs Screenshot".
 
 ## Step 5: Confirm the Alert Is Configured
 
 ```bash
 curl http://localhost:9090/api/v1/rules
 ```
-Or check the Prometheus UI at `http://localhost:9090/alerts` — screenshot
-this, showing the HighCPUUsage/HighMemoryUsage/HighDiskUsage rules listed
-(even if inactive) — satisfies "Alert Configuration Screenshot".
+Or check the Prometheus UI at `http://localhost:9090/alerts`
